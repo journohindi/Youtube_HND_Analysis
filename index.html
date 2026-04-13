@@ -1,86 +1,282 @@
-<div class="audit-report" style="font-family: sans-serif; line-height: 1.6; color: #111; max-width: 900px; margin: 0 auto; padding: 20px;">
-  <h1 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 10px;">
-    CRITICAL FAILURE ANALYSIS & GROWTH DIRECTIVES
-  </h1>
-  
-  <section class="category-section" style="margin-bottom: 30px;">
-    <h2 style="background-color: #f44336; color: white; padding: 10px; margin-top: 0;">
-      CATEGORY 1: LONG-FORM PACKAGING & RETENTION COLLAPSE
-    </h2>
-    <ul style="list-style-type: none; padding-left: 0;">
-      <li style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #fcfcfc;">
-        <strong>The Metric/Observation:</strong> "4300 धर्मों में से इस्लाम ही क्यों? डेकार्ट की उत्कृष्ट तकनीक" (5.7M impressions, 9.46% CTR, 11.33% APV / 1:41 AVD).
-        <br><br>
-        <strong>The Critical Failure:</strong> Pure clickbait disparity. The packaging manipulated a broad audience into clicking, but the dense, unadapted structural pacing alienated 89% of the audience immediately. You are destroying your channel's watch-time authority.
-        <br><br>
-        <span style="color: #d32f2f; font-weight: bold;">Severity: Critical</span>
-        <br><br>
-        <strong>Actionable Correction:</strong> Never pair a broad-appeal hook with niche, slow-paced delivery. Front-load the core philosophical payoff within the first 60 seconds. Enforce aggressive visual pattern interrupts (b-roll, dynamic text, zooms) every 8-12 seconds to force casual viewers to maintain attention.
-      </li>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Strategy Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        gray: { 850: '#1f2937', 900: '#111827', 950: '#030712' },
+                        brand: { 500: '#ef4444', 600: '#dc2626' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for a polished look */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans antialiased overflow-hidden selection:bg-brand-500 selection:text-white">
 
-      <li style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #fcfcfc;">
-        <strong>The Metric/Observation:</strong> "इस्लाम के विरुद्ध किताब लिखते-लिखते वह मुसलमान बन गया!..." (498k views, 9.19% APV / 1:51 AVD).
-        <br><br>
-        <strong>The Critical Failure:</strong> Intro structure is failing to validate the click. The audience clicks for the shocking irony, but you drown the first minute in slow exposition or chronological storytelling.
-        <br><br>
-        <span style="color: #d32f2f; font-weight: bold;">Severity: Critical</span>
-        <br><br>
-        <strong>Actionable Correction:</strong> Delete traditional chronological storytelling. Start the edit at the climax. Open the first 10 seconds with the subject's moment of crisis or most aggressive anti-religion quote, then hard-cut to his conversion reality. Fulfill the psychological promise instantly.
-      </li>
-    </ul>
-  </section>
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-900 border-r border-gray-800 hidden md:flex flex-col">
+            <div class="h-16 flex items-center px-6 border-b border-gray-800">
+                <i class="fa-brands fa-youtube text-brand-500 text-2xl mr-3"></i>
+                <span class="text-lg font-bold tracking-wider">YT ANALYTICS</span>
+            </div>
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2.5 bg-gray-800 text-white rounded-lg group">
+                            <i class="fa-solid fa-chart-pie w-6 text-brand-500"></i>
+                            <span class="font-medium text-sm">Overview Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2.5 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition-colors group">
+                            <i class="fa-solid fa-triangle-exclamation w-6 group-hover:text-yellow-500 transition-colors"></i>
+                            <span class="font-medium text-sm">Critical Failures</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2.5 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition-colors group">
+                            <i class="fa-solid fa-lightbulb w-6 group-hover:text-blue-500 transition-colors"></i>
+                            <span class="font-medium text-sm">Growth Directives</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-  <section class="category-section" style="margin-bottom: 30px;">
-    <h2 style="background-color: #ff9800; color: white; padding: 10px; margin-top: 0;">
-      CATEGORY 2: SHORTS FUNNEL & HOOK MECHANICS
-    </h2>
-    <ul style="list-style-type: none; padding-left: 0;">
-      <li style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #fcfcfc;">
-        <strong>The Metric/Observation:</strong> "नमाज़ की जमाअत छूट जाने का एहसास है 🥺 #shorts" (1.97M views, 1,003 subs gained). Ratio: ~1,964 views per 1 subscriber.
-        <br><br>
-        <strong>The Critical Failure:</strong> You are farming empty algorithmic spikes without building channel equity. Viewers consume the relatable emotion and instantly swipe away because there is zero strategic funnel or psychological incentive to invest in the channel.
-        <br><br>
-        <span style="color: #ff9800; font-weight: bold;">Severity: High</span>
-        <br><br>
-        <strong>Actionable Correction:</strong> Stop treating Shorts as standalone commodities. Engineer a funnel: pin a high-contrast comment directing them to a relevant long-form video, or implement a rapid, 2-second visual Call-To-Action at the exact emotional peak of the Short. Give them a mechanical reason to stop scrolling.
-      </li>
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-gray-900/50 backdrop-blur-md border-b border-gray-800 flex items-center justify-between px-6 z-10">
+                <div>
+                    <h1 class="text-xl font-semibold">Channel Performance Audit</h1>
+                    <p class="text-xs text-gray-400">Data snapshot based on provided metrics</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="px-3 py-1 bg-red-500/10 text-red-500 text-xs font-bold rounded-full border border-red-500/20">
+                        <i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> LIVE AUDIT
+                    </span>
+                </div>
+            </header>
 
-      <li style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #fcfcfc;">
-        <strong>The Metric/Observation:</strong> Instructional shorts (e.g., "ईद की नमाज़ कैसे अदा करें!") have a "Stayed to watch" rate below 50%.
-        <br><br>
-        <strong>The Critical Failure:</strong> Absolute failure of the 3-second hook mechanism. The visual or auditory framing is too static or lacks the aggressive pattern interrupt demanded by the Shorts algorithm.
-        <br><br>
-        <span style="color: #ff9800; font-weight: bold;">Severity: High</span>
-        <br><br>
-        <strong>Actionable Correction:</strong> Delete all introductory framing or slow transitions in the first 3 seconds. Begin speaking mid-action. Formulate the textual hook as a high-stakes challenge rather than a passive statement (e.g., change "How to pray" to "90% लोग नमाज़ में ये गलती करते हैं").
-      </li>
-    </ul>
-  </section>
+            <div class="flex-1 overflow-y-auto p-6 bg-[#0a0f1c]">
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i class="fa-solid fa-eye text-6xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-400 mb-1">Total Views</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">18.2M</h3>
+                        <p class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up mr-1"></i> Lifetime metric</p>
+                    </div>
+                    
+                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i class="fa-solid fa-users text-6xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-400 mb-1">Total Impressions</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">77.9M</h3>
+                        <p class="text-xs text-red-400 font-medium"><i class="fa-solid fa-arrow-down mr-1"></i> Conversion gap high</p>
+                    </div>
 
-  <section class="category-section" style="margin-bottom: 30px;">
-    <h2 style="background-color: #2196f3; color: white; padding: 10px; margin-top: 0;">
-      CATEGORY 3: METADATA & ALGORITHMIC POSITIONING
-    </h2>
-    <ul style="list-style-type: none; padding-left: 0;">
-      <li style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #fcfcfc;">
-        <strong>The Metric/Observation:</strong> Premium AI Series ("हज़रत ख़दीजा...", "हज़रत आइशा...") generated 10M+ and 3M+ impressions but suffocated at 3.42% and 3.29% CTRs respectively.
-        <br><br>
-        <strong>The Critical Failure:</strong> Ego-driven metadata formatting. Titles are 88+ characters long, causing severe mobile cutoff. Prioritizing internal studio tags ("AI चित्रित सीरीज़ - एपिसोड 1") over audience psychology devours character limits and creates corporate visual clutter.
-        <br><br>
-        <span style="color: #2196f3; font-weight: bold;">Severity: Medium</span>
-        <br><br>
-        <strong>Actionable Correction:</strong> Erase all episodic strings and production flexes from your titles. If "AI Series" is a selling point, make it a visual badge on the thumbnail. Shrink the title exclusively to the primal psychological hook, strictly under 50 characters, using common vernacular.
-      </li>
+                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i class="fa-solid fa-mouse-pointer text-6xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-400 mb-1">Average CTR</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">5.55%</h3>
+                        <p class="text-xs text-yellow-400 font-medium"><i class="fa-solid fa-minus mr-1"></i> Below 8% target</p>
+                    </div>
 
-      <li style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #fcfcfc;">
-        <strong>The Metric/Observation:</strong> Comparative videos like "बुद्ध से अल्लाह तक: एक चीनी बौद्ध की इस्लाम तक की यात्रा" (6.1M impressions, 5.83% CTR).
-        <br><br>
-        <strong>The Critical Failure:</strong> CTR underperforming relative to algorithmic push. Passive title phrasing fails to exploit the dramatic psychological pivot of the subject matter, leaving hundreds of thousands of views uncaptured.
-        <br><br>
-        <span style="color: #2196f3; font-weight: bold;">Severity: Medium</span>
-        <br><br>
-        <strong>Actionable Correction:</strong> Implement aggressive A/B thumbnail testing focusing on high-contrast "Before/After" visual states. Strip the title down to its core conflict using everyday language that maximizes curiosity (e.g., "बौद्ध धर्म छोड़कर इस्लाम क्यों चुना?").
-      </li>
-    </ul>
-  </section>
-</div>
+                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i class="fa-solid fa-clock text-6xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-400 mb-1">Channel AVD</p>
+                        <h3 class="text-3xl font-bold text-white mb-2">2:52</h3>
+                        <p class="text-xs text-red-400 font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Severe pacing drops</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fa-solid fa-chart-line text-blue-500 mr-2"></i> Reach vs. Conversion (Top 5 Videos)
+                        </h3>
+                        <div class="relative h-72 w-full">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg flex flex-col">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center">
+                            <i class="fa-solid fa-bullseye text-brand-500 mr-2"></i> Strategic Deficits
+                        </h3>
+                        <div class="flex-1 flex flex-col justify-center space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-300">Thumbnail/Title Packaging</span>
+                                    <span class="text-red-400 font-bold">Critical</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-300">Long-form Intro Retention (APV)</span>
+                                    <span class="text-red-400 font-bold">Critical</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-300">Shorts Subscriber Funnel</span>
+                                    <span class="text-orange-400 font-bold">High</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div class="bg-orange-500 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 mt-8 pb-2 border-b border-gray-800 text-gray-200">Execution Directives</h2>
+                <div class="space-y-4">
+                    
+                    <div class="bg-gray-900 border border-red-900/50 rounded-xl p-5 flex flex-col md:flex-row gap-6 shadow-lg">
+                        <div class="flex flex-col items-center justify-center md:w-32 md:border-r border-gray-800 pr-4">
+                            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
+                                <i class="fa-solid fa-skull-crossbones text-2xl"></i>
+                            </div>
+                            <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Critical</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-white mb-2">Pacing & Clickbait Disparity</h4>
+                            <p class="text-sm text-gray-400 mb-4"><strong>Observation:</strong> "4300 धर्मों में से..." pulled 5.7M impressions but had a catastrophic 11.33% APV.</p>
+                            <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                                <span class="block text-xs text-brand-500 font-bold uppercase mb-1">Action Protocol</span>
+                                <p class="text-sm text-gray-200">Never pair a broad-appeal hook with niche, slow-paced delivery. Front-load the core philosophical payoff within the first 60 seconds. Enforce aggressive visual pattern interrupts every 8-12 seconds.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 border border-red-900/50 rounded-xl p-5 flex flex-col md:flex-row gap-6 shadow-lg">
+                        <div class="flex flex-col items-center justify-center md:w-32 md:border-r border-gray-800 pr-4">
+                            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
+                                <i class="fa-solid fa-video-slash text-2xl"></i>
+                            </div>
+                            <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Critical</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-white mb-2">Narrative Intro Collapse</h4>
+                            <p class="text-sm text-gray-400 mb-4"><strong>Observation:</strong> Narrative videos ("किताब लिखते-लिखते...") suffer sub-10% APV.</p>
+                            <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                                <span class="block text-xs text-brand-500 font-bold uppercase mb-1">Action Protocol</span>
+                                <p class="text-sm text-gray-200">Delete traditional chronological storytelling. Start the edit at the climax. Open the first 10 seconds with the subject's moment of crisis, then hard-cut to the conversion. Fulfill the psychological promise instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 border border-orange-900/30 rounded-xl p-5 flex flex-col md:flex-row gap-6 shadow-lg">
+                        <div class="flex flex-col items-center justify-center md:w-32 md:border-r border-gray-800 pr-4">
+                            <div class="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 mb-2">
+                                <i class="fa-solid fa-filter text-2xl"></i>
+                            </div>
+                            <span class="text-xs font-bold text-orange-500 uppercase tracking-widest">High</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-white mb-2">Empty Shorts Equity</h4>
+                            <p class="text-sm text-gray-400 mb-4"><strong>Observation:</strong> Shorts like "नमाज़ की जमाअत..." get 2M views but require ~1,964 views to gain 1 sub.</p>
+                            <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
+                                <span class="block text-xs text-orange-400 font-bold uppercase mb-1">Action Protocol</span>
+                                <p class="text-sm text-gray-200">Stop treating Shorts as standalone commodities. Engineer a funnel: pin a high-contrast comment directing to long-form, or implement a rapid 2-second visual CTA at the exact emotional peak.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.font.family = 'Inter, sans-serif';
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ep 1 AI', 'Buddhist Convert', '4300 Religions', 'Sikh Woman', 'Grave AI Ep 1'],
+                    datasets: [
+                        {
+                            label: 'Impressions (Millions)',
+                            data: [10.2, 6.1, 5.7, 3.9, 3.2],
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Views (Millions)',
+                            data: [0.44, 0.43, 1.89, 0.37, 0.18],
+                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false, drawBorder: false } },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: { color: 'rgba(51, 65, 85, 0.5)', borderDash: [5, 5] },
+                            ticks: { callback: function(value) { return value + 'M'; } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
