@@ -3,279 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Strategy Dashboard</title>
+    <title>Advanced Channel Analytics Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <style>
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        .tab-btn.active { border-bottom: 2px solid #3b82f6; color: #60a5fa; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Custom scrollbar for tables */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        gray: { 850: '#1f2937', 900: '#111827', 950: '#030712' },
-                        brand: { 500: '#ef4444', 600: '#dc2626' }
+                        darkbg: '#020617',
+                        panelbg: '#0f172a',
+                        cardbg: '#1e293b',
                     }
                 }
             }
         }
     </script>
-    <style>
-        /* Custom scrollbar for a polished look */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-    </style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans antialiased overflow-hidden selection:bg-brand-500 selection:text-white">
+<body class="bg-darkbg text-slate-300 font-sans antialiased min-h-screen flex flex-col">
 
-    <div class="flex h-screen">
-        <aside class="w-64 bg-gray-900 border-r border-gray-800 hidden md:flex flex-col">
-            <div class="h-16 flex items-center px-6 border-b border-gray-800">
-                <i class="fa-brands fa-youtube text-brand-500 text-2xl mr-3"></i>
-                <span class="text-lg font-bold tracking-wider">YT ANALYTICS</span>
+    <nav class="bg-panelbg border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center font-bold text-white">YT</div>
+                    <span class="font-bold text-xl text-white tracking-tight">Analytics <span class="text-blue-500">Pro</span></span>
+                </div>
+                <div class="text-xs text-slate-500">Last Updated: Real-time Snapshot</div>
             </div>
-            <nav class="flex-1 overflow-y-auto py-4">
-                <ul class="space-y-1 px-3">
-                    <li>
-                        <a href="#" class="flex items-center px-3 py-2.5 bg-gray-800 text-white rounded-lg group">
-                            <i class="fa-solid fa-chart-pie w-6 text-brand-500"></i>
-                            <span class="font-medium text-sm">Overview Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-3 py-2.5 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition-colors group">
-                            <i class="fa-solid fa-triangle-exclamation w-6 group-hover:text-yellow-500 transition-colors"></i>
-                            <span class="font-medium text-sm">Critical Failures</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center px-3 py-2.5 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition-colors group">
-                            <i class="fa-solid fa-lightbulb w-6 group-hover:text-blue-500 transition-colors"></i>
-                            <span class="font-medium text-sm">Growth Directives</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+        </div>
+    </nav>
 
-        <main class="flex-1 flex flex-col overflow-hidden">
-            <header class="h-16 bg-gray-900/50 backdrop-blur-md border-b border-gray-800 flex items-center justify-between px-6 z-10">
-                <div>
-                    <h1 class="text-xl font-semibold">Channel Performance Audit</h1>
-                    <p class="text-xs text-gray-400">Data snapshot based on provided metrics</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span class="px-3 py-1 bg-red-500/10 text-red-500 text-xs font-bold rounded-full border border-red-500/20">
-                        <i class="fa-solid fa-circle text-[8px] mr-1 animate-pulse"></i> LIVE AUDIT
-                    </span>
-                </div>
-            </header>
+    <div class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="flex space-x-8 border-b border-slate-800 mb-8 overflow-x-auto">
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn active pb-4 text-sm font-semibold tracking-wide whitespace-nowrap transition-colors">MACRO DASHBOARD</button>
+            <button onclick="switchTab('top10')" id="btn-top10" class="tab-btn pb-4 text-sm font-semibold text-slate-500 hover:text-slate-300 tracking-wide whitespace-nowrap transition-colors">TOP 10 PERFORMERS</button>
+            <button onclick="switchTab('worst10')" id="btn-worst10" class="tab-btn pb-4 text-sm font-semibold text-slate-500 hover:text-slate-300 tracking-wide whitespace-nowrap transition-colors">BOTTOM 10 (DEAD WEIGHT)</button>
+            <button onclick="switchTab('single-video')" id="btn-single-video" class="tab-btn pb-4 text-sm font-semibold text-slate-500 hover:text-slate-300 tracking-wide whitespace-nowrap transition-colors">SINGLE VIDEO AUDIT</button>
+        </div>
 
-            <div class="flex-1 overflow-y-auto p-6 bg-[#0a0f1c]">
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-cardbg p-5 rounded-lg border border-slate-700/50 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 h-full w-1 bg-blue-500"></div>
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total Views</div>
+                    <div class="text-3xl font-black text-white">2.64M</div>
+                    <div class="mt-2 text-xs text-emerald-400">Aggregated across 484 uploads</div>
+                </div>
+                <div class="bg-cardbg p-5 rounded-lg border border-slate-700/50 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 h-full w-1 bg-purple-500"></div>
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total Watch Time</div>
+                    <div class="text-3xl font-black text-white">228.1K <span class="text-sm font-normal text-slate-500">hrs</span></div>
+                </div>
+                <div class="bg-cardbg p-5 rounded-lg border border-slate-700/50 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 h-full w-1 bg-emerald-500"></div>
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Global CTR</div>
+                    <div class="text-3xl font-black text-white">4.34%</div>
+                    <div class="mt-2 text-xs text-red-400">Warning: High variance across formats</div>
+                </div>
+                <div class="bg-cardbg p-5 rounded-lg border border-slate-700/50 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 h-full w-1 bg-orange-500"></div>
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Avg Views / Viewer</div>
+                    <div class="text-3xl font-black text-white">1.99</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-cardbg p-6 rounded-lg border border-slate-700/50">
+                    <h3 class="text-white font-bold mb-4 flex items-center justify-between">
+                        <span>Format Efficiency (Long vs Short)</span>
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="text-slate-500 border-b border-slate-700">
+                                    <th class="pb-2 font-medium">Format</th>
+                                    <th class="pb-2 font-medium">Volume</th>
+                                    <th class="pb-2 font-medium">Avg Views</th>
+                                    <th class="pb-2 font-medium">Avg CTR</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr>
+                                    <td class="py-3 text-blue-400 font-bold">Long-Form</td>
+                                    <td class="py-3">145</td>
+                                    <td class="py-3 text-white">12,091</td>
+                                    <td class="py-3 text-emerald-400">3.29%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 text-orange-400 font-bold">Shorts</td>
+                                    <td class="py-3">339</td>
+                                    <td class="py-3 text-white">2,644</td>
+                                    <td class="py-3 text-red-400">1.74%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-4 leading-relaxed">
+                        <strong class="text-orange-400">Critical Insight:</strong> Shorts comprise 70% of output but yield massively lower averages. Production resources are misaligned.
+                    </p>
+                </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-eye text-6xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-400 mb-1">Total Views</p>
-                        <h3 class="text-3xl font-bold text-white mb-2">18.2M</h3>
-                        <p class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up mr-1"></i> Lifetime metric</p>
+                <div class="bg-cardbg p-6 rounded-lg border border-slate-700/50">
+                    <h3 class="text-white font-bold mb-4">View Distribution</h3>
+                    <div class="h-48 w-full">
+                        <canvas id="distributionChart"></canvas>
                     </div>
-                    
-                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-users text-6xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-400 mb-1">Total Impressions</p>
-                        <h3 class="text-3xl font-bold text-white mb-2">77.9M</h3>
-                        <p class="text-xs text-red-400 font-medium"><i class="fa-solid fa-arrow-down mr-1"></i> Conversion gap high</p>
-                    </div>
-
-                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-mouse-pointer text-6xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-400 mb-1">Average CTR</p>
-                        <h3 class="text-3xl font-bold text-white mb-2">5.55%</h3>
-                        <p class="text-xs text-yellow-400 font-medium"><i class="fa-solid fa-minus mr-1"></i> Below 8% target</p>
-                    </div>
-
-                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fa-solid fa-clock text-6xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-400 mb-1">Channel AVD</p>
-                        <h3 class="text-3xl font-bold text-white mb-2">2:52</h3>
-                        <p class="text-xs text-red-400 font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Severe pacing drops</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                    <div class="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg">
-                        <h3 class="text-lg font-semibold mb-4 flex items-center">
-                            <i class="fa-solid fa-chart-line text-blue-500 mr-2"></i> Reach vs. Conversion (Top 5 Videos)
-                        </h3>
-                        <div class="relative h-72 w-full">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg flex flex-col">
-                        <h3 class="text-lg font-semibold mb-4 flex items-center">
-                            <i class="fa-solid fa-bullseye text-brand-500 mr-2"></i> Strategic Deficits
-                        </h3>
-                        <div class="flex-1 flex flex-col justify-center space-y-6">
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span class="text-gray-300">Thumbnail/Title Packaging</span>
-                                    <span class="text-red-400 font-bold">Critical</span>
-                                </div>
-                                <div class="w-full bg-gray-800 rounded-full h-2">
-                                    <div class="bg-red-500 h-2 rounded-full" style="width: 85%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span class="text-gray-300">Long-form Intro Retention (APV)</span>
-                                    <span class="text-red-400 font-bold">Critical</span>
-                                </div>
-                                <div class="w-full bg-gray-800 rounded-full h-2">
-                                    <div class="bg-red-500 h-2 rounded-full" style="width: 90%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span class="text-gray-300">Shorts Subscriber Funnel</span>
-                                    <span class="text-orange-400 font-bold">High</span>
-                                </div>
-                                <div class="w-full bg-gray-800 rounded-full h-2">
-                                    <div class="bg-orange-500 h-2 rounded-full" style="width: 75%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h2 class="text-xl font-bold mb-4 mt-8 pb-2 border-b border-gray-800 text-gray-200">Execution Directives</h2>
-                <div class="space-y-4">
-                    
-                    <div class="bg-gray-900 border border-red-900/50 rounded-xl p-5 flex flex-col md:flex-row gap-6 shadow-lg">
-                        <div class="flex flex-col items-center justify-center md:w-32 md:border-r border-gray-800 pr-4">
-                            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
-                                <i class="fa-solid fa-skull-crossbones text-2xl"></i>
-                            </div>
-                            <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Critical</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-lg font-bold text-white mb-2">Pacing & Clickbait Disparity</h4>
-                            <p class="text-sm text-gray-400 mb-4"><strong>Observation:</strong> "4300 धर्मों में से..." pulled 5.7M impressions but had a catastrophic 11.33% APV.</p>
-                            <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
-                                <span class="block text-xs text-brand-500 font-bold uppercase mb-1">Action Protocol</span>
-                                <p class="text-sm text-gray-200">Never pair a broad-appeal hook with niche, slow-paced delivery. Front-load the core philosophical payoff within the first 60 seconds. Enforce aggressive visual pattern interrupts every 8-12 seconds.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-900 border border-red-900/50 rounded-xl p-5 flex flex-col md:flex-row gap-6 shadow-lg">
-                        <div class="flex flex-col items-center justify-center md:w-32 md:border-r border-gray-800 pr-4">
-                            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
-                                <i class="fa-solid fa-video-slash text-2xl"></i>
-                            </div>
-                            <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Critical</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-lg font-bold text-white mb-2">Narrative Intro Collapse</h4>
-                            <p class="text-sm text-gray-400 mb-4"><strong>Observation:</strong> Narrative videos ("किताब लिखते-लिखते...") suffer sub-10% APV.</p>
-                            <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
-                                <span class="block text-xs text-brand-500 font-bold uppercase mb-1">Action Protocol</span>
-                                <p class="text-sm text-gray-200">Delete traditional chronological storytelling. Start the edit at the climax. Open the first 10 seconds with the subject's moment of crisis, then hard-cut to the conversion. Fulfill the psychological promise instantly.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-900 border border-orange-900/30 rounded-xl p-5 flex flex-col md:flex-row gap-6 shadow-lg">
-                        <div class="flex flex-col items-center justify-center md:w-32 md:border-r border-gray-800 pr-4">
-                            <div class="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 mb-2">
-                                <i class="fa-solid fa-filter text-2xl"></i>
-                            </div>
-                            <span class="text-xs font-bold text-orange-500 uppercase tracking-widest">High</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-lg font-bold text-white mb-2">Empty Shorts Equity</h4>
-                            <p class="text-sm text-gray-400 mb-4"><strong>Observation:</strong> Shorts like "नमाज़ की जमाअत..." get 2M views but require ~1,964 views to gain 1 sub.</p>
-                            <div class="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50">
-                                <span class="block text-xs text-orange-400 font-bold uppercase mb-1">Action Protocol</span>
-                                <p class="text-sm text-gray-200">Stop treating Shorts as standalone commodities. Engineer a funnel: pin a high-contrast comment directing to long-form, or implement a rapid 2-second visual CTA at the exact emotional peak.</p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </main>
+        </div>
+
+        <div id="top10" class="tab-content">
+            <div class="bg-cardbg border border-slate-700/50 rounded-lg overflow-hidden">
+                <div class="p-5 bg-panelbg border-b border-slate-800">
+                    <h2 class="text-lg font-bold text-white">Top 10 Highest Yield Assets</h2>
+                    <p class="text-xs text-slate-400 mt-1">Scale this specific architecture. Do not deviate.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="bg-slate-900">
+                            <tr class="text-slate-500">
+                                <th class="px-6 py-4 font-medium tracking-wider">Rank</th>
+                                <th class="px-6 py-4 font-medium tracking-wider">Video Title (Metadata)</th>
+                                <th class="px-6 py-4 font-medium tracking-wider">Views</th>
+                                <th class="px-6 py-4 font-medium tracking-wider">CTR</th>
+                                <th class="px-6 py-4 font-medium tracking-wider">APV</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#1</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate" title="हज़रत ख़दीजा (रज़ि.) की दुनिया की पहली AI-विज़ुअलाइज़्ड कहानी">हज़रत ख़दीजा (रज़ि.) की दुनिया की पहली AI-विज़ुअलाइज़्ड कहानी</td>
+                                <td class="px-6 py-4 text-emerald-400 font-bold">442,588</td>
+                                <td class="px-6 py-4">3.42%</td>
+                                <td class="px-6 py-4">23.62%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#2</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">"वो मुझे Brainwash करना चाहते थे" - पूर्व यहूदी...</td>
+                                <td class="px-6 py-4 text-emerald-400 font-bold">175,640</td>
+                                <td class="px-6 py-4 text-blue-400">6.48%</td>
+                                <td class="px-6 py-4 text-red-400">21.56%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#3</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">हज़रत आइशा (रज़ि.) की कहानी - AI विज़ुअलाइज़्ड</td>
+                                <td class="px-6 py-4 text-emerald-400 font-bold">132,766</td>
+                                <td class="px-6 py-4">3.29%</td>
+                                <td class="px-6 py-4">26.38%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#4</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">पैगंबर मुहम्मद ﷺ की माँ हज़रत आमिना</td>
+                                <td class="px-6 py-4 text-emerald-400 font-bold">93,699</td>
+                                <td class="px-6 py-4">5.22%</td>
+                                <td class="px-6 py-4 text-emerald-400">30.09%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#5</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">दुनिया में पहली बार: अल्लाह की चुनी हुई पाक औरतों...</td>
+                                <td class="px-6 py-4 text-emerald-400 font-bold">84,754</td>
+                                <td class="px-6 py-4 text-blue-400">6.21%</td>
+                                <td class="px-6 py-4 text-emerald-400 font-bold">53.58%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#6</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">सदियों से अनदेखा किया गया कुरान का चमत्कार!</td>
+                                <td class="px-6 py-4 text-white font-bold">72,339</td>
+                                <td class="px-6 py-4">5.45%</td>
+                                <td class="px-6 py-4 text-red-400">22.21%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#7</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">आखिर हम पहले फ़ातिहा के बजाय ये दुआ क्यों पढ़ते हैं?</td>
+                                <td class="px-6 py-4 text-white font-bold">58,808</td>
+                                <td class="px-6 py-4 text-blue-400">6.29%</td>
+                                <td class="px-6 py-4">27.64%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#8</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">कब्र में पहली रात | AI चित्रित क़यामत...</td>
+                                <td class="px-6 py-4 text-white font-bold">56,668</td>
+                                <td class="px-6 py-4">4.00%</td>
+                                <td class="px-6 py-4">24.15%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#9</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">जापानी प्रोफेसर ने अपनाया इस्लाम...</td>
+                                <td class="px-6 py-4 text-white font-bold">52,764</td>
+                                <td class="px-6 py-4">5.01%</td>
+                                <td class="px-6 py-4 text-emerald-400">30.42%</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition-colors">
+                                <td class="px-6 py-4 text-slate-500 font-bold">#10</td>
+                                <td class="px-6 py-4 text-white font-medium max-w-[300px] truncate">7 आयतें जिसने शैतान को रुला दिया</td>
+                                <td class="px-6 py-4 text-white font-bold">52,468</td>
+                                <td class="px-6 py-4 text-blue-400">5.91%</td>
+                                <td class="px-6 py-4">25.83%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="worst10" class="tab-content">
+            <div class="bg-red-900/10 border border-red-900/30 rounded-lg overflow-hidden">
+                <div class="p-5 bg-red-900/20 border-b border-red-900/40">
+                    <h2 class="text-lg font-bold text-red-400">Bottom 10 Channels Drags (Delete/Unlist)</h2>
+                    <p class="text-xs text-red-300 mt-1">Zero views. Zero CTR. Severe algorithmic penalty items.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="bg-red-950/50">
+                            <tr class="text-red-300/70">
+                                <th class="px-6 py-4 font-medium">Format</th>
+                                <th class="px-6 py-4 font-medium">Video Title</th>
+                                <th class="px-6 py-4 font-medium">Views</th>
+                                <th class="px-6 py-4 font-medium">CTR</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-red-900/20">
+                            <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">रूमी ने दी अपने बेटे को एक महान सीख! #shorts</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                            <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">क्या आप बता सकते है? #shorts</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                            <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">क्या यीशु ईसाई धर्म लेकर आए थे? #shorts</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                            <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">ज़िन्दगी के दो रास्ते! #shorts</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                            <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">जाग जाइए इससे पहले कि बहुत देर हो जाए! #shorts</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                            <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">नारियल का अद्भुत चमत्कार! #shorts</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                             <tr class="hover:bg-red-900/10">
+                                <td class="px-6 py-3"><span class="px-2 py-1 bg-red-900/50 text-red-200 text-xs rounded">Short</span></td>
+                                <td class="px-6 py-3 text-slate-300 truncate max-w-[300px]">क्या आप एक तनावपूर्ण जीवन से मुक्ति नहीं चाहते?</td>
+                                <td class="px-6 py-3 text-red-400 font-bold">1</td>
+                                <td class="px-6 py-3 text-red-400">0.00%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="single-video" class="tab-content">
+            <div class="bg-cardbg rounded-xl border border-slate-700/50 overflow-hidden shadow-2xl">
+                <div class="p-6 border-b border-slate-800 bg-panelbg relative">
+                    <div class="absolute top-0 right-0 p-6 opacity-10">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                        </svg>
+                    </div>
+                    <div class="text-blue-500 font-bold text-xs tracking-widest uppercase mb-2">Deep Dive Analysis</div>
+                    <h2 class="text-2xl font-bold text-white max-w-2xl leading-snug">"वो मुझे Brainwash करना चाहते थे" - एक पूर्व यहूदी का इ**राइल पर खुलासा</h2>
+                    <div class="flex gap-4 mt-4">
+                        <span class="px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-slate-300">Duration: 21m 46s</span>
+                        <span class="px-3 py-1 bg-red-900/30 text-red-400 border border-red-800/50 rounded-full text-xs font-medium">Issue: Severe Retention Drop</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 divide-x divide-slate-800 bg-slate-900/50">
+                    <div class="p-6 text-center">
+                        <div class="text-slate-500 text-xs font-bold uppercase mb-1">Views</div>
+                        <div class="text-2xl font-black text-white">175,640</div>
+                        <div class="text-xs text-emerald-400 mt-1">Excellent Volume</div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <div class="text-slate-500 text-xs font-bold uppercase mb-1">Click-Through Rate</div>
+                        <div class="text-2xl font-black text-blue-400">6.48%</div>
+                        <div class="text-xs text-emerald-400 mt-1">High Packaging Success</div>
+                    </div>
+                    <div class="p-6 text-center bg-red-900/10">
+                        <div class="text-slate-500 text-xs font-bold uppercase mb-1">Average % Viewed</div>
+                        <div class="text-2xl font-black text-red-400">21.56%</div>
+                        <div class="text-xs text-red-400 mt-1">Critical Abandonment</div>
+                    </div>
+                </div>
+
+                <div class="p-8">
+                    <h3 class="text-white font-bold text-lg mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Diagnostic Breakdown
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-panelbg border border-slate-700/50 rounded p-5 border-l-4 border-l-blue-500">
+                            <h4 class="text-white font-semibold text-sm mb-2">The Setup (Success)</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                The click-through rate of 6.48% indicates that the thumbnail imagery and the common-usage title phrasing ("Brainwash") perfectly aligned with audience curiosity triggers. The packaging worked exactly as intended.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-panelbg border border-slate-700/50 rounded p-5 border-l-4 border-l-red-500">
+                            <h4 class="text-white font-semibold text-sm mb-2">The Execution (Failure)</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                An APV of 21.56% means viewers are leaving after roughly 4.5 minutes of a 21-minute video. This exposes a massive pacing discrepancy. You established a high-stakes hook in the metadata, but the video either opened with slow exposition, off-topic introductions, or failed to deliver the immediate emotional context required to hold the viewers you acquired.
+                            </p>
+                        </div>
+
+                        <div class="bg-panelbg border border-slate-700/50 rounded p-5 border-l-4 border-l-emerald-500">
+                            <h4 class="text-white font-semibold text-sm mb-2">Mechanical Correction</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">
+                                1. Open your YouTube Studio retention graph for this specific video.<br>
+                                2. Locate the exact second the retention curve falls below 50%.<br>
+                                3. If the drop occurs in the first 30 seconds, your physical hook is broken. Begin future videos with the exact moment of conflict promised in the title.<br>
+                                4. Cut all generic intro sequences.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            
-            Chart.defaults.color = '#9ca3af';
-            Chart.defaults.font.family = 'Inter, sans-serif';
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'text-blue-500');
+                el.classList.add('text-slate-500');
+            });
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active', 'text-blue-500');
+            activeBtn.classList.remove('text-slate-500');
+        }
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Ep 1 AI', 'Buddhist Convert', '4300 Religions', 'Sikh Woman', 'Grave AI Ep 1'],
-                    datasets: [
-                        {
-                            label: 'Impressions (Millions)',
-                            data: [10.2, 6.1, 5.7, 3.9, 3.2],
-                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                            borderRadius: 4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Views (Millions)',
-                            data: [0.44, 0.43, 1.89, 0.37, 0.18],
-                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                            borderRadius: 4,
-                            yAxisID: 'y'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } },
-                        tooltip: {
-                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#cbd5e1',
-                            borderColor: '#334155',
-                            borderWidth: 1,
-                            padding: 12
-                        }
-                    },
-                    scales: {
-                        x: { grid: { display: false, drawBorder: false } },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            grid: { color: 'rgba(51, 65, 85, 0.5)', borderDash: [5, 5] },
-                            ticks: { callback: function(value) { return value + 'M'; } }
-                        }
+        // Initialize Chart
+        const ctx = document.getElementById('distributionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Long-Form Views', 'Shorts Views'],
+                datasets: [{
+                    data: [1753322, 896347],
+                    backgroundColor: ['#3b82f6', '#f97316'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#94a3b8', font: { size: 12 } }
                     }
                 }
-            });
+            }
         });
     </script>
 </body>
